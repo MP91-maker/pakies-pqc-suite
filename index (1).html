@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAKIES — Kryptografie-TÜV</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold:   #C9A84C;
+    --black:  #0A0A0A;
+    --bg:     #111111;
+    --card:   #1A1A1A;
+    --card2:  #222222;
+    --border: #2A2A2A;
+    --text:   #E8E8E0;
+    --muted:  #AAAAAA;
+    --dim:    #555555;
+    --red:    #E05252;
+    --orange: #E8943A;
+    --green:  #4CAF7D;
+  }
+
+  html, body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: #050505;
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo-mp {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .logo-sub {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    margin-top: 2px;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+  .header-badge {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 4px 10px;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* INTRO */
+  .intro-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  h1 span { color: var(--gold); }
+  .intro-desc {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    margin: 16px 0 28px;
+    font-weight: 300;
+  }
+  .gold-line {
+    width: 100%;
+    height: 1px;
+    background: var(--gold);
+    margin: 20px 0;
+    opacity: 0.6;
+  }
+
+  /* INPUTS */
+  .input-group { margin-bottom: 12px; }
+  input[type="text"], input[type="email"] {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    font-family: 'Montserrat', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input:focus { border-color: var(--gold); }
+  input::placeholder { color: var(--dim); }
+
+  /* BUTTONS */
+  .btn-gold {
+    width: 100%;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 15px 32px;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    font-family: 'Bebas Neue', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-top: 8px;
+  }
+  .btn-gold:hover { opacity: 0.85; }
+  .btn-outline {
+    width: 100%;
+    background: none;
+    color: var(--dim);
+    border: 1px solid var(--border);
+    padding: 12px 32px;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    font-family: 'Bebas Neue', sans-serif;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--dim); color: var(--muted); }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 28px;
+  }
+  .progress-seg {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .progress-seg.done { background: var(--gold); }
+  .progress-seg.active { background: var(--gold); opacity: 0.5; }
+
+  /* QUESTION */
+  .q-category {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    margin-bottom: 8px;
+  }
+  .q-counter {
+    font-size: 0.55rem;
+    color: var(--dim);
+    float: right;
+  }
+  .q-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 24px;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 0.82rem;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .option-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* RESULT */
+  .risk-badge {
+    padding: 20px 20px;
+    border: 2px solid var(--risk-color, var(--gold));
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .risk-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter---spacing: 0.1em;
+    color: var(--risk-color, var(--gold));
+    margin-bottom: 10px;
+  }
+  .risk-bar-bg {
+    width: 100%;
+    height: 5px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .risk-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--risk-color, var(--gold));
+    transition: width 1s ease;
+  }
+  .risk-score {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-align: right;
+  }
+  .risk-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-top: 12px;
+  }
+
+  .section-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    margin: 24px 0 10px;
+  }
+  .rec-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .rec-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  .cta-box {
+    border: 1px solid var(--gold);
+    border-left: 3px solid var(--gold);
+    padding: 18px 20px;
+    margin-top: 24px;
+  }
+  .cta-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    margin-bottom: 8px;
+  }
+  .cta-text {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.6rem;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+  }
+
+  /* TRUST BADGES */
+  .trust-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .trust-badge {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+
+  @media (max-width: 480px) {
+    main { padding: 28px 16px 60px; }
+    header { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo-mp">MP</div>
+    <div class="logo-sub">PAKIES · PQC SUITE</div>
+  </div>
+  <div class="header-badge">KOSTENLOS · 3 MIN</div>
+</header>
+
+<main>
+
+  <!-- SCREEN 0: INTRO -->
+  <div class="screen active" id="screen-intro">
+    <div class="intro-label">POST-QUANTUM CRYPTOGRAPHY</div>
+    <h1>Ihr persönliches<br><span>Kryptografie-<br>Risikoprofil</span></h1>
+    <div class="gold-line"></div>
+    <p class="intro-desc">
+      6 Fragen. Sofortiger Report. Erfahren Sie ob Ihre Infrastruktur
+      für die Post-Quantum-Ära gerüstet ist — bevor NIS2 und DORA
+      es zur Pflicht machen.
+    </p>
+    <div class="input-group">
+      <input type="text" id="inp-company" placeholder="Unternehmen (optional)">
+    </div>
+    <div class="input-group">
+      <input type="email" id="inp-email" placeholder="E-Mail für Report (optional)">
+    </div>
+    <button class="btn-gold" onclick="startQuiz()">ANALYSE STARTEN →</button>
+    <div class="trust-row">
+      <span class="trust-badge">FIPS 203</span>
+      <span class="trust-badge">FIPS 204</span>
+      <span class="trust-badge">NIS2</span>
+      <span class="trust-badge">BSI TR-02102</span>
+      <span class="trust-badge">DORA</span>
+    </div>
+  </div>
+
+  <!-- SCREEN 1: QUESTION -->
+  <div class="screen" id="screen-question">
+    <div class="progress-bar" id="progress-bar"></div>
+    <div class="q-category" id="q-category">
+      <span id="q-cat-text"></span>
+      <span class="q-counter" id="q-counter"></span>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="q-options"></div>
+  </div>
+
+  <!-- SCREEN 2: RESULT -->
+  <div class="screen" id="screen-result">
+    <div class="intro-label" id="res-company-label">IHR RISIKOPROFIL</div>
+
+    <div class="risk-badge" id="risk-badge">
+      <div class="risk-label" id="risk-label">—</div>
+      <div class="risk-bar-bg">
+        <div class="risk-bar-fill" id="risk-bar" style="width:0%"></div>
+      </div>
+      <div class="risk-score" id="risk-score"></div>
+      <div class="risk-desc" id="risk-desc"></div>
+    </div>
+
+    <div class="section-label">EMPFEHLUNGEN</div>
+    <div id="recommendations"></div>
+
+    <div class="cta-box">
+      <div class="cta-title">NÄCHSTER SCHRITT</div>
+      <p class="cta-text">
+        Kostenloser 30-Minuten-Call mit Marcel Pakies — Ihre Top-3-Risiken
+        und konkrete Maßnahmen für die PQC-Migration.
+      </p>
+      <a href="https://linkedin.com/in/marcelpakies" target="_blank">
+        <button class="btn-gold">CALL VEREINBAREN →</button>
+      </a>
+      <button class="btn-outline" onclick="resetQuiz()">NEUE ANALYSE</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>PAKIES MANAGEMENT & BUSINESS CONSULTING · BAD KREUZNACH</span>
+  <span style="color: var(--gold); font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem;">MP</span>
+</footer>
+
+<script>
+const questions = [
+  {
+    category: "TRANSPORT SECURITY",
+    text: "Welche TLS-Version nutzt Ihre primäre Web-Infrastruktur?",
+    options: [
+      { label: "TLS 1.3",           score: 3 },
+      { label: "TLS 1.2",           score: 2 },
+      { label: "TLS 1.1 oder älter",score: 0 },
+      { label: "Unbekannt",         score: 1 },
+    ]
+  },
+  {
+    category: "ZERTIFIKATE",
+    text: "Welche Algorithmen verwenden Ihre digitalen Zertifikate?",
+    options: [
+      { label: "RSA 4096+",         score: 2 },
+      { label: "RSA 2048 / ECC",    score: 1 },
+      { label: "RSA unter 2048",    score: 0 },
+      { label: "Unbekannt",         score: 1 },
+    ]
+  },
+  {
+    category: "GOVERNANCE",
+    text: "Haben Sie ein vollständiges Inventar aller kryptografischen Assets?",
+    options: [
+      { label: "Ja, vollständig dokumentiert", score: 3 },
+      { label: "Teilweise",                    score: 1 },
+      { label: "Nein",                          score: 0 },
+      { label: "In Planung",                   score: 1 },
+    ]
+  },
+  {
+    category: "COMPLIANCE",
+    text: "Welchen regulatorischen Anforderungen unterliegt Ihr Unternehmen?",
+    options: [
+      { label: "DORA / NIS2 / KRITIS",     score: 0 },
+      { label: "ISO 27001 / BSI Grundschutz", score: 1 },
+      { label: "Keine spezifischen",        score: 2 },
+      { label: "Unbekannt",                 score: 0 },
+    ]
+  },
+  {
+    category: "DATENSCHUTZ",
+    text: "Wie lange müssen Ihre verschlüsselten Daten vertraulich bleiben?",
+    options: [
+      { label: "Weniger als 5 Jahre", score: 3 },
+      { label: "5 bis 10 Jahre",      score: 1 },
+      { label: "Mehr als 10 Jahre",   score: 0 },
+      { label: "Dauerhaft / Unbekannt", score: 0 },
+    ]
+  },
+  {
+    category: "STRATEGIE",
+    text: "Ist Post-Quantum Kryptografie auf der Agenda Ihres CISO / IT-Leiters?",
+    options: [
+      { label: "Ja, aktives Projekt",          score: 3 },
+      { label: "Thema bekannt, kein Budget",   score: 1 },
+      { label: "Nicht bekannt",                score: 0 },
+      { label: "Kein CISO vorhanden",          score: 0 },
+    ]
+  },
+];
+
+let current = 0;
+let scores  = [];
+let company = "";
+
+function startQuiz() {
+  company = document.getElementById('inp-company').value || "Ihr Unternehmen";
+  current = 0;
+  scores  = [];
+  showScreen('screen-question');
+  renderQuestion();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function renderQuestion() {
+  const q   = questions[current];
+  const bar = document.getElementById('progress-bar');
+  bar.innerHTML = questions.map((_, i) => {
+    let cls = 'progress-seg';
+    if (i < current)  cls += ' done';
+    if (i === current) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  document.getElementById('q-cat-text').textContent = q.category;
+  document.getElementById('q-counter').textContent   = `${current + 1} / ${questions.length}`;
+  document.getElementById('q-text').textContent      = q.text;
+
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = q.options.map((o, i) =>
+    `<button class="option-btn" onclick="answer(${o.score})">${o.label}</button>`
+  ).join('');
+}
+
+function answer(score) {
+  scores.push(score);
+  current++;
+  if (current < questions.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  const total = scores.reduce((a, b) => a + b, 0);
+  const max   = questions.reduce((a, q) => a + Math.max(...q.options.map(o => o.score)), 0);
+  const pct   = total / max;
+
+  let label, color, desc, recs;
+
+  if (pct >= 0.7) {
+    label = "NIEDRIGES RISIKO";
+    color = "var(--green)";
+    desc  = "Ihre Infrastruktur ist grundsätzlich gut aufgestellt. Proaktive PQC-Planung empfohlen.";
+    recs  = [
+      "PQC-Roadmap für die nächsten 12 Monate erstellen",
+      "ML-KEM als Standard für neue Systeme definieren",
+      "Mitarbeiter-Schulung Kryptografie-Hygiene planen",
+    ];
+  } else if (pct >= 0.4) {
+    label = "MITTLERES RISIKO";
+    color = "var(--orange)";
+    desc  = "Handlungsbedarf identifiziert. PQC-Roadmap innerhalb 12 Monaten empfehlenswert.";
+    recs  = [
+      "Kryptografie-Inventar vervollständigen",
+      "TLS 1.3 auf allen Systemen sicherstellen",
+      "PQC-Migrationsprojekt budgetieren",
+      "NIS2/DORA Compliance-Gap analysieren",
+    ];
+  } else {
+    label = "HOHES RISIKO";
+    color = "var(--red)";
+    desc  = "Kritische Lücken in Ihrer Kryptografie-Infrastruktur. Sofortiger Handlungsbedarf.";
+    recs  = [
+      "Sofortige Bestandsaufnahme aller kryptografischen Systeme",
+      "Management-Briefing zu Quantum-Risiken und Harvest-Now-Decrypt-Later",
+      "Regulatorische Compliance-Gaps dokumentieren (NIS2, DORA)",
+      "PQC-Pilot auf einem kritischen System innerhalb 60 Tagen",
+    ];
+  }
+
+  document.getElementById('res-company-label').textContent = company.toUpperCase() + " · RISIKOPROFIL";
+  document.getElementById('risk-badge').style.setProperty('--risk-color', color);
+  document.getElementById('risk-label').textContent = label;
+  document.getElementById('risk-desc').textContent  = desc;
+  document.getElementById('risk-score').textContent = `${total} / ${max} Punkte`;
+
+  setTimeout(() => {
+    document.getElementById('risk-bar').style.width = Math.round(pct * 100) + '%';
+  }, 100);
+
+  document.getElementById('recommendations').innerHTML = recs.map(r =>
+    `<div class="rec-item"><div class="rec-dot"></div><span>${r}</span></div>`
+  ).join('');
+
+  showScreen('screen-result');
+}
+
+function resetQuiz() {
+  document.getElementById('inp-company').value = '';
+  document.getElementById('inp-email').value   = '';
+  showScreen('screen-intro');
+}
+</script>
+
+</body>
+</html>
