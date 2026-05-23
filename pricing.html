@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAKIES — PQC Leistungen & Preise</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #C9A84C; --black: #0A0A0A; --bg: #111111;
+    --card: #1A1A1A; --card2: #222222; --border: #2A2A2A;
+    --text: #E8E8E0; --muted: #AAAAAA; --dim: #555555;
+    --red: #E05252; --orange: #E8943A; --green: #4CAF7D;
+  }
+  html, body { background: var(--black); color: var(--text); font-family: 'Montserrat', sans-serif; font-weight: 300; min-height: 100vh; }
+
+  header { background: #050505; border-bottom: 1px solid var(--border); padding: 20px 32px; display: flex; justify-content: space-between; align-items: center; }
+  .logo-mp { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--gold); letter-spacing: 0.1em; }
+  .logo-sub { font-size: 0.6rem; letter-spacing: 0.2em; color: var(--dim); margin-top: 2px; font-family: 'Bebas Neue', sans-serif; }
+  .nav-link { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); font-family: 'Bebas Neue', sans-serif; text-decoration: none; transition: color 0.2s; }
+  .nav-link:hover { color: var(--gold); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 60px 24px 100px; }
+
+  .hero-label { font-size: 0.6rem; letter-spacing: 0.25em; color: var(--gold); font-family: 'Bebas Neue', sans-serif; margin-bottom: 12px; }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 300; line-height: 1.1; margin-bottom: 16px; }
+  h1 span { color: var(--gold); }
+  .hero-desc { color: var(--muted); font-size: 0.85rem; line-height: 1.8; max-width: 580px; margin-bottom: 12px; }
+
+  /* DIFFERENTIATOR STRIP */
+  .diff-strip { display: flex; gap: 0; margin: 28px 0 48px; border: 1px solid var(--border); }
+  .diff-item { flex: 1; padding: 14px 16px; border-right: 1px solid var(--border); }
+  .diff-item:last-child { border-right: none; }
+  .diff-title { font-size: 0.6rem; color: var(--gold); font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .diff-text { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+
+  /* CAPACITY NOTICE */
+  .capacity-notice { background: var(--card); border-left: 3px solid var(--orange); padding: 12px 16px; margin-bottom: 40px; display: flex; align-items: center; gap: 12px; }
+  .capacity-dot { width: 8px; height: 8px; background: var(--orange); border-radius: 50%; flex-shrink: 0; }
+  .capacity-text { font-size: 0.75rem; color: var(--muted); }
+  .capacity-text strong { color: var(--orange); }
+
+  /* JOURNEY */
+  .journey { display: flex; align-items: center; gap: 0; margin-bottom: 40px; overflow-x: auto; padding-bottom: 8px; }
+  .journey-step { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+  .journey-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); border: 2px solid var(--dim); margin-bottom: 8px; }
+  .journey-dot.active { background: var(--gold); border-color: var(--gold); }
+  .journey-label { font-size: 0.55rem; letter-spacing: 0.1em; color: var(--dim); font-family: 'Bebas Neue', sans-serif; white-space: nowrap; }
+  .journey-label.active { color: var(--gold); }
+  .journey-price { font-size: 0.5rem; color: var(--dim); font-family: 'Montserrat', sans-serif; margin-top: 2px; }
+  .journey-price.active { color: var(--gold); opacity: 0.7; }
+  .journey-line { flex: 1; height: 1px; background: var(--border); min-width: 30px; margin-bottom: 22px; }
+  .journey-line.active { background: var(--gold); opacity: 0.4; }
+
+  .gold-line { width: 100%; height: 1px; background: var(--gold); opacity: 0.3; margin: 8px 0; }
+
+  /* PRODUCTS */
+  .products { display: flex; flex-direction: column; gap: 2px; }
+  .product { border-left: 3px solid var(--border); padding: 28px 28px 24px 24px; background: var(--card); transition: border-color 0.3s; position: relative; }
+  .product:hover { border-left-color: var(--gold); }
+  .product.featured { border-left-color: var(--gold); background: var(--card2); }
+  .product-badge { position: absolute; top: 20px; right: 20px; font-size: 0.55rem; letter-spacing: 0.15em; padding: 3px 10px; font-family: 'Bebas Neue', sans-serif; border: 1px solid; }
+  .badge-recommended { border-color: var(--gold); color: var(--gold); }
+  .badge-mrr { border-color: var(--green); color: var(--green); }
+  .badge-new { border-color: var(--orange); color: var(--orange); }
+
+  .product-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; }
+  .product-step { font-size: 0.55rem; letter-spacing: 0.2em; color: var(--dim); font-family: 'Bebas Neue', sans-serif; margin-bottom: 4px; }
+  .product-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.08em; color: var(--text); }
+  .product-price { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--gold); line-height: 1; }
+  .product-price-note { font-size: 0.7rem; color: var(--dim); margin-top: 2px; }
+  .product-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.7; margin: 12px 0 14px; max-width: 540px; }
+
+  .deliverables { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+  .deliverable { font-size: 0.62rem; letter-spacing: 0.06em; color: var(--muted); border: 1px solid var(--border); padding: 3px 9px; }
+
+  .product-timeline { font-size: 0.68rem; color: var(--dim); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+  .product-timeline span { display: flex; align-items: center; gap: 6px; }
+  .dot-small { width: 5px; height: 5px; background: var(--gold); flex-shrink: 0; }
+
+  .cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-gold { background: var(--gold); color: var(--black); border: none; padding: 11px 26px; font-size: 0.7rem; letter-spacing: 0.2em; font-family: 'Bebas Neue', sans-serif; cursor: pointer; text-decoration: none; display: inline-block; transition: opacity 0.2s; }
+  .btn-gold:hover { opacity: 0.85; }
+  .btn-outline { background: none; border: 1px solid var(--border); color: var(--muted); padding: 11px 26px; font-size: 0.7rem; letter-spacing: 0.15em; font-family: 'Bebas Neue', sans-serif; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color 0.2s, color 0.2s; }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .upsell-arrow { display: flex; align-items: center; justify-content: center; padding: 6px 0; gap: 8px; }
+  .upsell-line { width: 1px; height: 20px; background: var(--border); }
+  .upsell-label { font-size: 0.5rem; color: var(--dim); letter-spacing: 0.15em; font-family: 'Bebas Neue', sans-serif; }
+
+  /* PRICING LOGIC NOTE */
+  .pricing-note { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--dim); padding: 14px 16px; margin-top: 32px; }
+  .pricing-note-title { font-size: 0.6rem; color: var(--dim); font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.15em; margin-bottom: 8px; }
+  .pricing-note-text { font-size: 0.75rem; color: var(--dim); line-height: 1.7; }
+  .pricing-note-text a { color: var(--gold); text-decoration: none; }
+
+  /* DIFFERENTIATOR SECTION */
+  .why-section { margin-top: 56px; }
+  .section-label { font-size: 0.6rem; letter-spacing: 0.2em; color: var(--gold); font-family: 'Bebas Neue', sans-serif; margin-bottom: 20px; }
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2px; }
+  .why-item { background: var(--card); padding: 20px; border-left: 2px solid var(--border); }
+  .why-title { font-size: 0.72rem; color: var(--text); font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .why-text { font-size: 0.74rem; color: var(--muted); line-height: 1.6; }
+
+  /* DISCLAIMER */
+  .disclaimer { margin-top: 48px; padding: 16px 20px; border: 1px solid var(--border); }
+  .disclaimer-title { font-size: 0.55rem; color: var(--dim); font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.15em; margin-bottom: 6px; }
+  .disclaimer-text { font-size: 0.7rem; color: var(--dim); line-height: 1.6; }
+
+  /* TRUST */
+  .trust-section { margin-top: 48px; }
+  .trust-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .trust-badge { font-size: 0.58rem; letter-spacing: 0.1em; color: var(--dim); border: 1px solid var(--border); padding: 4px 10px; font-family: 'Bebas Neue', sans-serif; }
+
+  footer { border-top: 1px solid var(--border); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; font-size: 0.6rem; color: var(--dim); letter-spacing: 0.08em; margin-top: 60px; }
+
+  @media (max-width: 600px) {
+    main { padding: 32px 16px 80px; }
+    .product { padding: 20px 16px; }
+    .diff-strip { flex-direction: column; }
+    .diff-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .diff-item:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo-mp">MP</div>
+    <div class="logo-sub">PAKIES · PQC SUITE</div>
+  </div>
+  <nav style="display:flex; gap:24px; align-items:center;">
+    <a href="index.html" class="nav-link">KRYPTOGRAFIE-TÜV</a>
+    <a href="https://linkedin.com/in/marcelpakies" target="_blank" class="nav-link">KONTAKT</a>
+  </nav>
+</header>
+
+<main>
+
+  <div class="hero-label">LEISTUNGEN & INVESTITION</div>
+  <h1>Compliance-Sicherheit<br>für den <span>DACH-Mittelstand</span></h1>
+  <p class="hero-desc">
+    Kein Großberatungshaus. Kein Lock-in. Ein spezialisierter Ansprechpartner
+    der Ihre Migration von Anfang bis Ende begleitet — zu Preisen die
+    mittelstandsfähig sind.
+  </p>
+
+  <!-- DIFFERENTIATOR STRIP -->
+  <div class="diff-strip">
+    <div class="diff-item">
+      <div class="diff-title">MITTELSTAND-FOKUS</div>
+      <div class="diff-text">DACH-Markt, 50–500 MA. Keine Konzern-Prozesse, kein Overhead.</div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-title">PERSÖNLICH</div>
+      <div class="diff-text">Direkter Ansprechpartner. Kein Ticket-System, kein Junior-Team.</div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-title">TECHNISCH FUNDIERT</div>
+      <div class="diff-text">Eigener PQC-Code, Open-Source-Basis, NIST-Standards. Kein Buzzword-Consulting.</div>
+    </div>
+    <div class="diff-item">
+      <div class="diff-title">KEINE ZERTIFIZIERUNGS-PFLICHT</div>
+      <div class="diff-text">Spezialisierter Berater — transparent kommuniziert. Kein BSI-Prüfer, kein falsches Versprechen.</div>
+    </div>
+  </div>
+
+  <!-- CAPACITY NOTICE -->
+  <div class="capacity-notice">
+    <div class="capacity-dot"></div>
+    <div class="capacity-text">
+      <strong>Limitierte Kapazität:</strong> Maximal 2 aktive Audits + 1 Roadmap + 2 Retainer gleichzeitig.
+      Aktuelle Verfügbarkeit: direkt anfragen.
+    </div>
+  </div>
+
+  <!-- JOURNEY -->
+  <div class="journey">
+    <div class="journey-step">
+      <div class="journey-dot active"></div>
+      <div class="journey-label active">SNAPSHOT</div>
+      <div class="journey-price active">Kostenlos</div>
+    </div>
+    <div class="journey-line active"></div>
+    <div class="journey-step">
+      <div class="journey-dot active"></div>
+      <div class="journey-label active">STRATEGY CALL</div>
+      <div class="journey-price active">500 €</div>
+    </div>
+    <div class="journey-line"></div>
+    <div class="journey-step">
+      <div class="journey-dot"></div>
+      <div class="journey-label">AUDIT</div>
+      <div class="journey-price">2.500 €</div>
+    </div>
+    <div class="journey-line"></div>
+    <div class="journey-step">
+      <div class="journey-dot"></div>
+      <div class="journey-label">ROADMAP</div>
+      <div class="journey-price">9.500 €</div>
+    </div>
+    <div class="journey-line"></div>
+    <div class="journey-step">
+      <div class="journey-dot"></div>
+      <div class="journey-label">RETAINER</div>
+      <div class="journey-price">3.500 €/Mo.</div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div class="products">
+
+    <!-- STUFE 0 -->
+    <div class="product">
+      <div class="product-top">
+        <div>
+          <div class="product-step">STUFE 0 · EINSTIEG</div>
+          <div class="product-name">Quantum Readiness Snapshot</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-price" style="color:var(--green);">Kostenlos</div>
+          <div class="product-price-note">Kein Login · 3 Minuten</div>
+        </div>
+      </div>
+      <p class="product-desc">
+        6 Fragen. Sofortiger Risiko-Score. Erfahren Sie ob Ihre
+        Infrastruktur NIS2- und DORA-konform aufgestellt ist — ohne
+        Verpflichtung, ohne Datenweitergabe.
+      </p>
+      <div class="deliverables">
+        <span class="deliverable">Risikoscore</span>
+        <span class="deliverable">4 Empfehlungen</span>
+        <span class="deliverable">Sofortiger Report</span>
+      </div>
+      <div class="cta-row">
+        <a href="index.html" class="btn-gold">JETZT STARTEN →</a>
+      </div>
+    </div>
+
+    <div class="upsell-arrow">
+      <div class="upsell-line"></div>
+      <div class="upsell-label">↓ NÄCHSTER SCHRITT</div>
+      <div class="upsell-line"></div>
+    </div>
+
+    <!-- STUFE 0.5 -->
+    <div class="product">
+      <div class="product-badge badge-new">NEU</div>
+      <div class="product-top">
+        <div>
+          <div class="product-step">STUFE 0.5 · ORIENTIERUNG</div>
+          <div class="product-name">90-Min. Strategy Call</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-price">500 €</div>
+          <div class="product-price-note">Einmalig · 90 Minuten</div>
+        </div>
+      </div>
+      <p class="product-desc">
+        Strukturiertes Gespräch: Ihre aktuelle Infrastruktur, konkrete
+        Risiken, regulatorische Pflichten (NIS2/DORA), realistische
+        Zeitplanung. Sie bekommen ein schriftliches Memo mit den
+        3 wichtigsten Handlungsfeldern — sofort umsetzbar.
+      </p>
+      <div class="deliverables">
+        <span class="deliverable">90 Min. Videotermin</span>
+        <span class="deliverable">Schriftliches Memo</span>
+        <span class="deliverable">Top-3-Handlungsfelder</span>
+        <span class="deliverable">Regulatorik-Einschätzung</span>
+      </div>
+      <div class="product-timeline">
+        <span><div class="dot-small"></div>Termin innerhalb 5 Werktage</span>
+        <span><div class="dot-small"></div>Memo binnen 48 Stunden</span>
+      </div>
+      <div class="cta-row">
+        <a href="https://linkedin.com/in/marcelpakies" target="_blank" class="btn-gold">TERMIN ANFRAGEN →</a>
+      </div>
+    </div>
+
+    <div class="upsell-arrow">
+      <div class="upsell-line"></div>
+      <div class="upsell-label">↓ AUF BASIS DES CALLS</div>
+      <div class="upsell-line"></div>
+    </div>
+
+    <!-- STUFE 1 -->
+    <div class="product featured">
+      <div class="product-badge badge-recommended">EMPFOHLEN</div>
+      <div class="product-top">
+        <div>
+          <div class="product-step">STUFE 1 · EINSTIEGSPRODUKT</div>
+          <div class="product-name">PQC Quick Audit</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-price">2.500 €</div>
+          <div class="product-price-note">Einmalig · 2 Wochen</div>
+        </div>
+      </div>
+      <p class="product-desc">
+        Vollständige Analyse Ihrer kryptografischen Infrastruktur.
+        Auditfähiger PDF-Report — vorzeigbar für Vorstand, Versicherung
+        und Regulatoren. Ihre Lücken schwarz auf weiß, mit konkreter
+        Prioritätenliste.
+      </p>
+      <div class="deliverables">
+        <span class="deliverable">6-Kategorien Analyse</span>
+        <span class="deliverable">PDF Report (4 Seiten)</span>
+        <span class="deliverable">Prioritäten-Matrix</span>
+        <span class="deliverable">Migrations-Roadmap (grob)</span>
+        <span class="deliverable">NIS2/DORA Gap-Einschätzung</span>
+        <span class="deliverable">Follow-up Call 30 Min.</span>
+      </div>
+      <div class="product-timeline">
+        <span><div class="dot-small"></div>Kickoff: 60 Min.</span>
+        <span><div class="dot-small"></div>Report: 10 Werktage</span>
+        <span><div class="dot-small"></div>Zahlung: Rechnung + Überweisung</span>
+      </div>
+      <div class="cta-row">
+        <a href="https://linkedin.com/in/marcelpakies" target="_blank" class="btn-gold">AUDIT ANFRAGEN →</a>
+        <a href="index.html" class="btn-outline">ERST SNAPSHOT STARTEN</a>
+      </div>
+    </div>
+
+    <div class="upsell-arrow">
+      <div class="upsell-line"></div>
+      <div class="upsell-label">↓ AUF BASIS DES AUDITS</div>
+      <div class="upsell-line"></div>
+    </div>
+
+    <!-- STUFE 2 -->
+    <div class="product">
+      <div class="product-top">
+        <div>
+          <div class="product-step">STUFE 2 · KERNPRODUKT</div>
+          <div class="product-name">PQC Migrations-Roadmap</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-price">9.500 €</div>
+          <div class="product-price-note">Einmalig · 4 Wochen</div>
+        </div>
+      </div>
+      <p class="product-desc">
+        Priorisierter Migrationsplan von RSA/ECC zu ML-KEM/ML-DSA.
+        Vendor-Auswahl, Timeline, Budget-Planung — vollständig
+        dokumentiert, umsetzungsbereit und NIS2-konform.
+        Preis gilt bis zur ersten veröffentlichten Case Study.
+      </p>
+      <div class="deliverables">
+        <span class="deliverable">Vollständiges Inventar</span>
+        <span class="deliverable">Vendor-Empfehlungen</span>
+        <span class="deliverable">Budget-Planung</span>
+        <span class="deliverable">NIS2-Krypto-Dokument</span>
+        <span class="deliverable">Pilot-Implementierung</span>
+        <span class="deliverable">3 Abstimmungs-Calls</span>
+      </div>
+      <div class="product-timeline">
+        <span><div class="dot-small"></div>Voraussetzung: Quick Audit</span>
+        <span><div class="dot-small"></div>Laufzeit: 4 Wochen</span>
+        <span><div class="dot-small"></div>Zahlung: 50% / 50%</span>
+      </div>
+      <div class="cta-row">
+        <a href="https://linkedin.com/in/marcelpakies" target="_blank" class="btn-gold">ROADMAP ANFRAGEN →</a>
+      </div>
+    </div>
+
+    <div class="upsell-arrow">
+      <div class="upsell-line"></div>
+      <div class="upsell-label">↓ BEGLEITENDE UMSETZUNG</div>
+      <div class="upsell-line"></div>
+    </div>
+
+    <!-- STUFE 3 -->
+    <div class="product">
+      <div class="product-badge badge-mrr">WIEDERKEHREND</div>
+      <div class="product-top">
+        <div>
+          <div class="product-step">STUFE 3 · RETAINER</div>
+          <div class="product-name">Migration-Begleitung</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="product-price">3.500 €</div>
+          <div class="product-price-note">pro Monat · min. 3 Monate</div>
+        </div>
+      </div>
+      <p class="product-desc">
+        Monatliche Begleitung der PQC-Migration — von der
+        Pilot-Implementierung bis zur vollständigen RSA-Ablösung.
+        Laufende Qualitätssicherung, monatlicher Scanning-Report,
+        direkter Ansprechpartner per Signal oder Mail.
+      </p>
+      <div class="deliverables">
+        <span class="deliverable">Monatlicher PQC-Scan</span>
+        <span class="deliverable">Implementierungs-Review</span>
+        <span class="deliverable">Direkter Kanal</span>
+        <span class="deliverable">Monatlicher Report</span>
+        <span class="deliverable">Jährliche Re-Zertifizierung</span>
+      </div>
+      <div class="product-timeline">
+        <span><div class="dot-small"></div>Voraussetzung: Roadmap</span>
+        <span><div class="dot-small"></div>Kündigung: monatlich ab M4</span>
+        <span><div class="dot-small"></div>Zahlung: monatliche Rechnung</span>
+      </div>
+      <div class="cta-row">
+        <a href="https://linkedin.com/in/marcelpakies" target="_blank" class="btn-gold">RETAINER ANFRAGEN →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PRICING NOTE -->
+  <div class="pricing-note">
+    <div class="pricing-note-title">HINWEIS ZUR PREISGESTALTUNG</div>
+    <div class="pricing-note-text">
+      Die aktuellen Preise gelten in der Aufbauphase bis zur ersten
+      veröffentlichten Case Study. Danach werden die Preise schrittweise
+      an das dann erreichte Vertrauensniveau angepasst.
+      Frühbucher sichern sich die aktuellen Konditionen dauerhaft für
+      laufende Projekte. Alle Preise zzgl. gesetzlicher MwSt.
+      Zahlung per Rechnung und Überweisung (SEPA).
+    </div>
+  </div>
+
+  <!-- WHY SECTION -->
+  <div class="why-section">
+    <div class="section-label">WARUM DIESER WEG FUNKTIONIERT</div>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-title">Versicherungsschutz-Argument</div>
+        <div class="why-text">Ihre Cyber-Police deckt Quantum-Angriffe nicht ab. Ein auditfähiger PQC-Report ist Ihre Dokumentation gegenüber Versicherern und Regulatoren.</div>
+      </div>
+      <div class="why-item">
+        <div class="why-title">Harvest-Now-Decrypt-Later</div>
+        <div class="why-text">Daten mit langer Vertraulichkeitsdauer sind heute bereits gefährdet. Warten kostet mehr als Handeln — und NIS2 macht es zur Pflicht.</div>
+      </div>
+      <div class="why-item">
+        <div class="why-title">Kein Lock-in</div>
+        <div class="why-text">Jede Stufe liefert eigenständigen Wert. Wer nur den Audit kauft, hat einen vollständigen Report. Keine Verpflichtung zur nächsten Stufe.</div>
+      </div>
+      <div class="why-item">
+        <div class="why-title">Offene Standards</div>
+        <div class="why-text">Alle Empfehlungen basieren auf NIST-Standards und Open-Source-Bibliotheken. Keine Abhängigkeit von proprietären Vendor-Lösungen.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <div class="disclaimer-title">LEISTUNGSABGRENZUNG</div>
+    <div class="disclaimer-text">
+      PAKIES Management & Business Consulting erbringt Beratungsleistungen
+      zur PQC-Readiness-Analyse und Migrationsplanung. Die Leistungen
+      umfassen keine Rechts- oder Steuerberatung sowie keine Zertifizierung
+      nach BSI-Prüfstandards. Implementierungsleistungen werden als
+      begleitende Beratung erbracht — die technische Umsetzung verbleibt
+      beim Auftraggeber oder dessen IT-Dienstleister. Haftung ist auf
+      die vereinbarte Vergütung begrenzt. Es gelten die AGB der
+      PAKIES Management & Business Consulting UG (haftungsbeschränkt).
+    </div>
+  </div>
+
+  <!-- TRUST -->
+  <div class="trust-section" style="margin-top:40px;">
+    <div class="section-label">TECHNISCHE BASIS</div>
+    <div class="trust-row">
+      <span class="trust-badge">FIPS 203 · ML-KEM-768</span>
+      <span class="trust-badge">FIPS 204 · ML-DSA-65</span>
+      <span class="trust-badge">NIS2 · ART. 21</span>
+      <span class="trust-badge">DORA · ART. 9</span>
+      <span class="trust-badge">BSI TR-02102</span>
+      <span class="trust-badge">OPEN QUANTUM SAFE</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>PAKIES MANAGEMENT & BUSINESS CONSULTING UG (HAFTUNGSBESCHRÄNKT) · HRB 24836 · BAD KREUZNACH</span>
+  <span style="color:var(--gold); font-family:'Bebas Neue',sans-serif; font-size:0.8rem;">MP</span>
+</footer>
+
+</body>
+</html>
